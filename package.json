@@ -1,0 +1,13 @@
+{
+  "name": "cardtool",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/taigadiscord/cardtool",
+  "author": "OfficialCRUGG <ich@crugg.de>",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^7.1.0",
+    "mysql2": "^2.1.0",
+    "node-html-to-image": "^2.0.0"
+  }
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            height: 368px;
+            width: 284px;
+            background-color: {{rarityColor}};
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
+        .imageContainer {
+            background-image: url("{{imageUrl}}");
+            width: 284px;
+            height: 276px;
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+        }
+        .nameContainer {
+            position: absolute;
+            width: 284px;
+            height: 37px;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(5px);
+            font-size: 18px;
+            line-height: 37px;
+            text-align: center;
+        }
+        .animeContainer {
+            position: absolute;
+            width: 284px;
+            height: 27px;
+            top: 249px;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(5px);
+            font-size: 13px;
+            line-height: 27px;
+            text-align: center;
+        }
+        .rarityContainer {
+            position: absolute;
+            width: 276px;
+            height: 28px;
+            top: 280px;
+            font-size: 18px;
+            line-height: 28px;
+            text-align: right;
+        }
+        .ageContainer {
+            position: absolute;
+            width: 127px;
+            height: 23px;
+            top: 312px;
+            left: 8px;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(5px);
+        }
+        .genContainer {
+            position: absolute;
+            width: 127px;
+            height: 23px;
+            top: 312px;
+            left: 149px;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(5px);
+        }
+        .perContainer {
+            position: absolute;
+            width: 127px;
+            height: 23px;
+            top: 339px;
+            left: 8px;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(5px);
+        }
+        .entContainer {
+            position: absolute;
+            width: 127px;
+            height: 23px;
+            top: 339px;
+            left: 149px;
+            background-color: rgba(0,0,0,0.75);
+            backdrop-filter: blur(5px);
+        }
+        .iconContainer {
+            position: absolute;
+            width: 23px;
+            height: 100%;
+            border-right: 1px solid black;
+            line-height: 23px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .dataContainer {
+            position: absolute;
+            top: 0;
+            left: 24px;
+            height: 100%;
+            width: calc(100% - 24px);
+            text-align: center;
+            line-height: 23px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="imageContainer"></div>
+    <div class="nameContainer">{{displayName}}</div>
+    <div class="animeContainer">{{anime}}</div>
+    <div class="rarityContainer">{{rarityName}}</div>
+    <div class="ageContainer">
+        <div class="iconContainer"><i class="fa fa-birthday-cake"></i></div>
+        <div class="dataContainer">{{age}} years old</div>
+    </div>
+    <div class="genContainer">
+        <div class="iconContainer"><i class="fa fa-venus-mars"></i></div>
+        <div class="dataContainer">{{gender}}</div>
+    </div>
+    <div class="perContainer">
+        <div class="iconContainer"><i class="fa fa-user"></i></div>
+        <div class="dataContainer">{{personality}}</div>
+    </div>
+    <div class="entContainer">
+        <div class="iconContainer"><i class="fa fa-paw"></i></div>
+        <div class="dataContainer">{{entity}}</div>
+    </div>
+</html>

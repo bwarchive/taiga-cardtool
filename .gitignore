@@ -1,0 +1,4 @@
+node_modules
+src/cards
+src/cards.json
+src/config.json
