@@ -1,12 +1,14 @@
 const inquirer = require("inquirer");
 const htmlToImage = require("node-html-to-image");
 const fs = require("fs");
+const mysql = require("mysql2");
 
 let defaultConfigContents = {
     user: "databaseUser",
     password: "databasePassword",
     database: "databaseName",
-    pw: "databaseUserPassword"
+    host: "databaseHost",
+    port: "databaseHostPort"
 }
 
 if(!fs.existsSync("config.json")) {
@@ -21,12 +23,14 @@ if(!fs.existsSync("cards")) {
     fs.mkdirSync("cards");
 }
 
+const config = require("./config.json");
+
 inquirer.prompt([
     {
         type: "list",
         name: "action",
         message: "What do you want to do?",
-        choices: ["DEV: Export Trading Cards to Database", "Clear local Trading Cards", "Add Local Trading Card", "Generate Trading Card Images", "DEV: Add Dummy"],
+        choices: ["DEV: Export Trading Cards to Database", "Clear local Trading Cards", "Add Local Trading Card", "Generate Trading Card Images", "DEV: Add Dummy", "DEV: Migrate old DB to new"],
         filter: (val) => {
             if(val === "DEV: Export Trading Cards to Database") {
                 return "export";
@@ -36,8 +40,10 @@ inquirer.prompt([
                 return "new";
             } else if(val === "Generate Trading Card Images") {
                 return "gen";
-            } else if(vall === "DEV: Add Dummy") {
+            } else if(val === "DEV: Add Dummy") {
                 return "dummy";
+            } else if(val === "DEV: Migrate old DB to new") {
+                return "migrate";
             }
         }
     },
@@ -127,7 +133,49 @@ inquirer.prompt([
     } else if(answers.action === "clear") {
         console.log("Not implemented yet, delete cards.json manually");
     } else if(answers.action === "export") {
-        console.log("Not implemented yet.");
+        if(config === defaultConfigContents) {
+            console.log("You don't have any valid MySQL Data in your config.json. Please keep in mind that this feature is only intended for taiga Staff and will not work on fresh MySQL Databases.")
+        } else { 
+            console.log("Not implemented yet");
+        }
+    } else if(answers.action === "migrate") {
+        if(config === defaultConfigContents) {
+            console.log("You don't have any valid MySQL Data in your config.json. Please keep in mind that this feature is only intended for taiga Staff and will not work on fresh MySQL Databases.")
+        } else {
+            let rarities = {
+                common: "1",
+                uncommon: "2",
+                rare: "3",
+                exotic: "4",
+                ultimative: "5"
+            }
+            let cards = require("./cards.json");
+            let con = mysql.createConnection({
+                host: config.host,
+                user: config.user,
+                database: config.database,
+                password: config.password,
+                port: config.port
+            });
+            cards.forEach((card, index) => {
+                if(card.internalName !== "dummy") {
+                    con.query("SELECT * FROM tc_cards WHERE id = ? LIMIT 1;", [index + 1], (err, results) => {
+                        if(err) {
+                            throw err;
+                        }
+                        con.query("INSERT INTO tc_cards2(id,internalName,displayName,owners,maxOwners,rarity,imageUrl,age,gender,personality,entity) VALUES(?,?,?,?,?,?,?,?,?,?,?)", [(index + 1), card.internalName,card.displayName,results[0].owners,card.maxOwners,rarities[card.rarity],card.imageUrl,card.age,card.gender,card.personality,card.entity], (err, result) => {
+                            if(err) throw err;
+                            console.log((index + 1) + ":" + card.internalName + " - Success")
+                        })
+                    })
+                } else {
+                    con.query("INSERT INTO tc_cards2(id,internalName) VALUES(?,?)", [(index + 1), card.internalName], (err, result) => {
+                        if(err) throw err;
+                        console.log((index + 1) + ":" + card.internalName + " - Success")
+                    })
+                }
+            });
+        }
     } else if(answers.action === "gen") {
         let cards = require("./cards.json");
         console.log("Starting Rendering of Cards. Program will exit once complete...")
