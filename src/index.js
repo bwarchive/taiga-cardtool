@@ -135,8 +135,35 @@ inquirer.prompt([
     } else if(answers.action === "export") {
         if(config === defaultConfigContents) {
             console.log("You don't have any valid MySQL Data in your config.json. Please keep in mind that this feature is only intended for taiga Staff and will not work on fresh MySQL Databases.")
-        } else { 
-            console.log("Not implemented yet");
+        } else {
+            let rarities = {
+                common: "1",
+                uncommon: "2",
+                rare: "3",
+                exotic: "4",
+                ultimative: "5"
+            }
+            let cards = require("./cards.json");
+            let con = mysql.createConnection({
+                host: config.host,
+                user: config.user,
+                database: config.database,
+                password: config.password,
+                port: config.port
+            });
+            cards.forEach((card, index) => {
+                if(card.internalName !== "dummy") {
+                    con.query("INSERT INTO tc_cards2(internalName,displayName,owners,maxOwners,rarity,imageUrl,age,gender,personality,entity) VALUES(?,?,?,?,?,?,?,?,?,?)", [card.internalName,card.displayName,0 ,card.maxOwners,rarities[card.rarity],card.imageUrl,card.age,card.gender,card.personality,card.entity], (err, result) => {
+                            if(err) throw err;
+                            console.log(result.insertId + ":" + card.internalName + " - Success")
+                        })
+                } else {
+                    con.query("INSERT INTO tc_cards2(internalName) VALUES(?)", [card.internalName], (err, result) => {
+                        if(err) throw err;
+                        console.log(result.insertId + ":" + card.internalName + " - Success")
+                    })
+                }
+            });
         }
     } else if(answers.action === "migrate") {
         if(config === defaultConfigContents) {
@@ -219,6 +246,7 @@ function generateImage(internalName, rarity, displayName, anime, age, gender, pe
             personality,
             entity,
             imageUrl
-        }
+        },
+        waitUntil: ["networkdidle0", "DOMContentLoaded"]
     });
 }
